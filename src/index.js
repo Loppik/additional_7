@@ -1,8 +1,5 @@
 module.exports = function solveSudoku(matrix) {
   let defAr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  let possibleValues;
-  let cellWithMinCountOfValues;
-  let row, col, matrixCopy;
 
   function deepCopy(matrix) {
     let clone = [];
@@ -13,13 +10,14 @@ module.exports = function solveSudoku(matrix) {
   }
 
   function solve(matrix) {
+        let cellWithMinCountOfValues = undefined;
         while(true) {
-          cellWithMinCountOfValues = undefined;
-          matrix.forEach((row, rowIndex) => {
-            row.forEach((num, colIndex) => {
-              if (num == 0) {
-                possibleValues = defAr.slice();
-                
+          cellWithMinCountOfValues = undefined
+          for(let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
+            for(let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+              if (matrix[rowIndex][colIndex] == 0) {
+                var possibleValues = defAr.slice();
+
                 // Row
                 for(let i = 0; i < 9; i++) {
                   if (possibleValues.indexOf(matrix[rowIndex][i]) != -1) {
@@ -45,6 +43,7 @@ module.exports = function solveSudoku(matrix) {
                   };
                 };
 
+
                 if (possibleValues.length == 0) {
                   return false;
                 }
@@ -57,8 +56,8 @@ module.exports = function solveSudoku(matrix) {
                   cellWithMinCountOfValues = [[rowIndex, colIndex], possibleValues];
                 }
               }
-            });
-          });
+            }
+          }
           if (!cellWithMinCountOfValues) {
             return true;
           };
@@ -67,12 +66,12 @@ module.exports = function solveSudoku(matrix) {
           };
         };
 
-        row = cellWithMinCountOfValues[0][0];
-        col = cellWithMinCountOfValues[0][1];
-        for (let i = 0; i < cellWithMinCountOfValues[1].length; i++) {
-          matrixCopy = deepCopy(matrix);
-          matrixCopy[row][col] = cellWithMinCountOfValues[1][i];
+        let row = cellWithMinCountOfValues[0][0];
+        let col = cellWithMinCountOfValues[0][1];
 
+        for (let i = 0; i < cellWithMinCountOfValues[1].length; i++) {
+          let matrixCopy = deepCopy(matrix);
+          matrixCopy[row][col] = cellWithMinCountOfValues[1][i];
           if (solve(matrixCopy)) {
             for (let j = 0; j < matrixCopy.length; j++) {
               for (let k = 0; k < matrixCopy[0].length; k++) {
